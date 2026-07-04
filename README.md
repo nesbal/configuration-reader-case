@@ -29,6 +29,21 @@ Web arayüzü:
 http://localhost:8080/Configurations
 ```
 
+İlk çalıştırmada MongoDB otomatik olarak örnek case kayıtlarıyla seed edilir.
+
+Seed dosyası:
+
+```text
+mongo-init/seed.js
+```
+
+Fresh kurulum testi için mevcut volume silinerek yeniden başlatılabilir:
+
+```bash
+docker compose down -v
+docker compose up --build
+```
+
 ## Örnek MongoDB Kayıtları
 
 | Name | Type | Value | IsActive | ApplicationName |
@@ -67,4 +82,5 @@ Bu projede aşağıdaki case beklentileri karşılanmıştır:
 - Storage erişilemezse son başarılı cache ile devam edilir.
 - Web arayüzünde kayıt listeleme, ekleme, güncelleme ve client-side name filtreleme vardır.
 - Docker Compose ile MongoDB ve web uygulaması birlikte çalışır.
+- İlk çalıştırmada MongoDB örnek kayıtlarla seed edilir.
 - Unit testler eklenmiştir.

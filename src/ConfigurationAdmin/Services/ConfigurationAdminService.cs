@@ -1,5 +1,6 @@
 using ConfigurationReader.Models;
 using MongoDB.Driver;
+using ConfigurationAdmin.Messaging;
 
 namespace ConfigurationAdmin.Services;
 
@@ -7,8 +8,14 @@ public class ConfigurationAdminService : IConfigurationAdminService
 {
     private readonly IMongoCollection<ConfigurationItem> _collection;
 
-    public ConfigurationAdminService(IConfiguration configuration)
+    private readonly IConfigurationChangePublisher _publisher;
+
+    public ConfigurationAdminService(
+        IConfiguration configuration,
+        IConfigurationChangePublisher publisher)
     {
+        _publisher = publisher;
+
         var connectionString = configuration["MongoDb:ConnectionString"];
         var databaseName = configuration["MongoDb:DatabaseName"];
         var collectionName = configuration["MongoDb:CollectionName"];
@@ -38,10 +45,14 @@ public class ConfigurationAdminService : IConfigurationAdminService
     public async Task CreateAsync(ConfigurationItem item)
     {
         await _collection.InsertOneAsync(item);
+
+        _publisher.Publish(item.ApplicationName, item.Name);
     }
 
     public async Task UpdateAsync(ConfigurationItem item)
     {
         await _collection.ReplaceOneAsync(x => x.Id == item.Id, item);
+
+        _publisher.Publish(item.ApplicationName, item.Name);
     }
 }

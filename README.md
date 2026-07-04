@@ -14,6 +14,7 @@ Proje iki ana parçadan oluşur:
 - MongoDB
 - Docker Compose
 - xUnit
+- RabbitMQ
 
 ## Projeyi Docker Compose ile Çalıştırma
 
@@ -84,3 +85,6 @@ Bu projede aşağıdaki case beklentileri karşılanmıştır:
 - Docker Compose ile MongoDB ve web uygulaması birlikte çalışır.
 - İlk çalıştırmada MongoDB örnek kayıtlarla seed edilir.
 - Unit testler eklenmiştir.
+- RabbitMQ ile konfigürasyon değişiklikleri için message broker entegrasyonu eklenmiştir.
+- Admin panelden kayıt ekleme/güncelleme sonrası `configuration-changes` exchange’ine mesaj publish edilir.
+- ConfigurationReader, RabbitMQ bağlantısı varsa ilgili `ApplicationName` için gelen değişiklik mesajlarında cache refresh edebilir.

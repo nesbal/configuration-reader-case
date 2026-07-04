@@ -1,3 +1,4 @@
+using ConfigurationAdmin.Messaging;
 using ConfigurationAdmin.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -6,6 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddSingleton<IConfigurationAdminService, ConfigurationAdminService>();
+
+builder.Services.AddSingleton<IConfigurationChangePublisher, RabbitMqConfigurationChangePublisher>();
 
 var app = builder.Build();
 

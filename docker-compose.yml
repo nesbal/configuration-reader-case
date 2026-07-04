@@ -7,6 +7,12 @@ services:
     volumes:
       - mongodb_data:/data/db
       - ./mongo-init:/docker-entrypoint-initdb.d
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: configuration-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 
   configuration-admin:
     build:
@@ -20,8 +26,10 @@ services:
       MongoDb__ConnectionString: "mongodb://mongodb:27017/ConfigurationDb"
       MongoDb__DatabaseName: "ConfigurationDb"
       MongoDb__CollectionName: "Configurations"
+      RabbitMQ__ConnectionString: "amqp://guest:guest@rabbitmq:5672/"
     depends_on:
       - mongodb
+      - rabbitmq
 
 volumes:
   mongodb_data:

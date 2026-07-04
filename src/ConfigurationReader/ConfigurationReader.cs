@@ -2,15 +2,17 @@ using ConfigurationReader.Abstractions;
 using ConfigurationReader.Converters;
 using ConfigurationReader.Models;
 using ConfigurationReader.Storage;
+using ConfigurationReader.Messaging;
 
 namespace ConfigurationReader;
 
-public class ConfigurationReader
+public class ConfigurationReader : IDisposable
 {
     private readonly string _applicationName;
     private readonly IConfigurationStorage _storage;
     private readonly Timer _timer;
     private readonly SemaphoreSlim _refreshLock = new(1, 1);
+    private readonly RabbitMqConfigurationChangeSubscriber? _subscriber;
 
     private IReadOnlyDictionary<string, ConfigurationItem> _cache =
         new Dictionary<string, ConfigurationItem>();
@@ -30,6 +32,15 @@ public class ConfigurationReader
             null,
             refreshTimerIntervalInMs,
             refreshTimerIntervalInMs);
+        var rabbitMqConnectionString = Environment.GetEnvironmentVariable("RabbitMQ__ConnectionString");
+
+        if (!string.IsNullOrWhiteSpace(rabbitMqConnectionString))
+        {
+            _subscriber = new RabbitMqConfigurationChangeSubscriber(
+                rabbitMqConnectionString,
+                _applicationName,
+                RefreshAsync);
+        }
     }
 
     internal ConfigurationReader(
@@ -77,5 +88,12 @@ public class ConfigurationReader
         {
             _refreshLock.Release();
         }
+    }
+
+    public void Dispose()
+    {
+        _timer.Dispose();
+        _subscriber?.Dispose();
+        _refreshLock.Dispose();
     }
 }

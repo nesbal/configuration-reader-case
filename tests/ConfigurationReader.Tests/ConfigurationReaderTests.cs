@@ -192,4 +192,28 @@ public class ConfigurationReaderTests
 
         Assert.Equal("soty.io", result);
     }
+
+    [Fact]
+    public void GetValue_ReturnsFalse_WhenBoolValueIsZero()
+    {
+        var items = new List<ConfigurationItem>
+        {
+            new()
+            {
+                Id = "1",
+                Name = "IsBasketEnabled",
+                Type = "bool",
+                Value = "0",
+                IsActive = true,
+                ApplicationName = "SERVICE-A"
+            }
+        };
+
+        var storage = new FakeConfigurationStorage(items);
+        var reader = new Reader("SERVICE-A", storage);
+
+        var result = reader.GetValue<bool>("IsBasketEnabled");
+
+        Assert.False(result);
+    }
 }

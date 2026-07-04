@@ -9,7 +9,7 @@ public static class ConfigurationValueConverter
             "string" => value,
             "int" or "integer" => int.Parse(value),
             "double" => double.Parse(value),
-            "bool" or "boolean" => value == "1" || bool.Parse(value),
+            "bool" or "boolean" => value == "1" || value.Equals("true", StringComparison.OrdinalIgnoreCase),
             _ => throw new NotSupportedException($"Unsupported configuration type: {type}")
         };
 

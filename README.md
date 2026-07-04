@@ -88,3 +88,5 @@ Bu projede aşağıdaki case beklentileri karşılanmıştır:
 - RabbitMQ ile konfigürasyon değişiklikleri için message broker entegrasyonu eklenmiştir.
 - Admin panelden kayıt ekleme/güncelleme sonrası `configuration-changes` exchange’ine mesaj publish edilir.
 - ConfigurationReader, RabbitMQ bağlantısı varsa ilgili `ApplicationName` için gelen değişiklik mesajlarında cache refresh edebilir.
+- ConfigurationItem için validation kuralları eklenmiştir.
+- Validation geliştirmesi TDD akışıyla yapılmıştır: önce failing testler yazılmış, sonra model validation eklenmiştir.

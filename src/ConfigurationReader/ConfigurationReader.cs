@@ -53,7 +53,7 @@ public class ConfigurationReader
         return ConfigurationValueConverter.ConvertValue<T>(item.Value, item.Type);
     }
 
-    private async Task RefreshAsync()
+    internal async Task RefreshAsync()
     {
         if (!await _refreshLock.WaitAsync(0))
         {

@@ -1,0 +1,57 @@
+@model IReadOnlyList<ConfigurationReader.Models.ConfigurationItem>
+
+@{
+    ViewData["Title"] = "Configurations";
+}
+
+<h1>Configurations</h1>
+
+<p>
+    <a class="btn btn-primary" asp-action="Create">New Configuration</a>
+</p>
+
+<input
+    id="nameFilter"
+    class="form-control mb-3"
+    placeholder="Filter by name..."
+    onkeyup="filterByName()" />
+
+<table class="table table-bordered" id="configTable">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Value</th>
+            <th>Is Active</th>
+            <th>Application Name</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Type</td>
+                <td>@item.Value</td>
+                <td>@item.IsActive</td>
+                <td>@item.ApplicationName</td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+    function filterByName() {
+        const filter = document.getElementById("nameFilter").value.toLowerCase();
+        const rows = document.querySelectorAll("#configTable tbody tr");
+
+        rows.forEach(row => {
+            const name = row.cells[0].innerText.toLowerCase();
+            row.style.display = name.includes(filter) ? "" : "none";
+        });
+    }
+</script>

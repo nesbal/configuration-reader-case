@@ -165,4 +165,31 @@ public class ConfigurationReaderTests
 
         Assert.Equal("new-value", result);
     }
+
+    [Fact]
+    public async Task RefreshAsync_KeepsLastSuccessfulCache_WhenStorageFails()
+    {
+        var storage = new FakeConfigurationStorage(new List<ConfigurationItem>
+        {
+            new()
+            {
+                Id = "1",
+                Name = "SiteName",
+                Type = "string",
+                Value = "soty.io",
+                IsActive = true,
+                ApplicationName = "SERVICE-A"
+            }
+        });
+
+        var reader = new Reader("SERVICE-A", storage);
+
+        storage.ThrowException = true;
+
+        await reader.RefreshAsync();
+
+        var result = reader.GetValue<string>("SiteName");
+
+        Assert.Equal("soty.io", result);
+    }
 }
